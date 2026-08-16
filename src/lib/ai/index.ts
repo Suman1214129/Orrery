@@ -18,12 +18,12 @@ import { generateId } from '@/lib/db';
 // ==========================================================================
 // OPENROUTER CLIENT
 // ==========================================================================
-const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || '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';
+const OPENROUTER_API_KEY = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY || '';
 const OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1';
-const DEFAULT_MODEL = process.env.NEXT_PUBLIC_OPENROUTER_MODEL || 'xiaomi/mimo-v2-flash:free';
+const DEFAULT_MODEL = process.env.NEXT_PUBLIC_OPENROUTER_MODEL || 'nvidia/nemotron-3-ultra-550b-a55b:free';
 
 // Check if API key is configured
-const isAPIKeyConfigured = OPENROUTER_API_KEY.length > 0 && OPENROUTER_API_KEY !== 'your_openrouter_api_key_here';
+const isAPIKeyConfigured = Boolean(OPENROUTER_API_KEY) && OPENROUTER_API_KEY !== 'your_openrouter_api_key_here';
 
 interface OpenRouterMessage {
      role: 'system' | 'user' | 'assistant';

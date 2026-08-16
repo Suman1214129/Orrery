@@ -39,6 +39,7 @@
     "cmdk": "^1.1.1",
     "d3": "^7.9.0",
     "dexie": "^4.2.1",
+    "firebase": "^12.17.1",
     "framer-motion": "^12.26.2",
     "lodash.debounce": "^4.0.8",
     "lowlight": "^3.3.0",

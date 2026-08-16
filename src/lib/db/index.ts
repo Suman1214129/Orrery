@@ -430,214 +430,117 @@ export async function initializeSampleVault(): Promise<void> {
      const noteCount = await db.notes.count();
      if (noteCount > 0) return; // Already has data
 
-     // Create sample notes
      await createNote(
-          'Welcome to Orrery',
-          `# Welcome to Orrery 🌍
+          'The Thirsty Crow',
+          `# The Thirsty Crow
 
-Your **premium second brain** for thinking, writing, and connecting ideas.
-
-## Quick Start
-
-1. Create notes using the **+ New Note** button or \`Cmd+N\`
-2. Link notes together using [[Wiki-Style Links]]
-3. Add #tags to organize your thoughts
-4. View connections in the **Graph View**
-
-## Key Features
-
-- **Rich Text Editor** - Write in markdown with live preview
-- **Wiki-style Linking** - Connect ideas with [[double brackets]]
-- **Graph Visualization** - See how your notes connect
-- **AI Assistant** - Enhance your writing and explore ideas
-- **Canvas** - Visually organize research and concepts
-
-## Keyboard Shortcuts
-
-| Shortcut | Action |
-|----------|--------|
-| \`Cmd+K\` | Command Palette |
-| \`Cmd+N\` | New Note |
-| \`Cmd+G\` | Graph View |
-| \`Cmd+/\` | Toggle AI Panel |
+*A timeless fable of wit, perseverance, and the triumph of ingenuity over adversity.*
 
 ---
 
-*Start exploring by creating your first note!*`,
-          'note'
-     );
+## Prologue
 
-     await createNote(
-          'Getting Started with Writing',
-          `# Getting Started with Writing ✍️
+In the heart of a vast, sun-scorched land, where the earth cracked like old parchment and the air shimmered with relentless heat, there lived a crow of uncommon intelligence. He was sleek and dark as midnight, with eyes that caught the light like polished obsidian — eyes that missed nothing.
 
-Welcome to your writing journey in Orrery!
+---
 
-## Writing Tips
+## Part I — The Drought
 
-Use the **slash command** menu by typing \`/\` to insert:
-- Headings (\`/heading1\`, \`/heading2\`, \`/heading3\`)
-- Quotes (\`/quote\`)
-- Code blocks (\`/code\`)
-- Images (\`/image\`)
-- Tables (\`/table\`)
+It had not rained in forty days.
 
-## Formatting
+The rivers had retreated into memory. The ponds had surrendered to the sun. Even the oldest trees, whose roots reached deep into the earth's secrets, had begun to whisper of surrender.
 
-- **Bold** with \`**text**\`
-- *Italic* with \`*text*\`
-- ~~Strikethrough~~ with \`~~text~~\`
-- \`Code\` with backticks
+The crow had flown since dawn — over cracked riverbeds, over wilting fields, over villages where even the cattle stood still, too weary to search for shade. His throat burned. His wings, usually so effortless, now felt heavy as stone.
 
-## Story Mode
+> *"A thirsty crow is a desperate crow,"* the old birds used to say. *"And a desperate crow is a dangerous one."*
 
-For narrative writing, try the **Narrative Graph** feature:
-1. Tag your note as a #story
-2. Click the "Narrative Mode" toggle
-3. Let AI help explore plot branches
+But the crow was not yet desperate. He was still thinking.
 
-## Related Notes
+---
 
-- [[Welcome to Orrery]]
-- [[Character Development Guide]]
+## Part II — The Discovery
 
-#writing #tutorial`,
-          'note'
-     );
+It was the glint that saved him.
 
-     await createNote(
-          'Character Development Guide',
-          `# Character Development Guide 🎭
+Half-hidden beneath the sprawling arms of an ancient oak, half-buried in dry leaves and forgotten by the world — a clay pitcher. Tall, round-bellied, and unmistakably promising.
 
-Creating compelling characters for your stories.
+The crow descended in a slow spiral, landing on the pitcher's rim with the careful grace of one who has learned not to celebrate too soon.
 
-## Core Components
+He peered inside.
 
-### 1. Motivation
-What drives your character? Their deepest desires and fears shape every decision.
+Water. Dark, cool, and real — but cruelly low. The waterline sat far below his reach, no matter how he stretched, no matter how he angled his beak. The pitcher was deep, and the water was deep within it, and between them lay an impossible distance.
 
-### 2. Backstory
-Past experiences that shaped who they are today.
+He tried once. Twice. A third time.
 
-### 3. Character Arc
-How will they change throughout the story?
+Nothing.
 
-## Character Template
+---
 
-\`\`\`
-Name: 
-Age:
-Occupation:
-Core Motivation:
-Greatest Fear:
-Key Relationships:
-Internal Conflict:
-External Goal:
-\`\`\`
+## Part III — The Temptation of Giving Up
 
-## Example: Sarah Mitchell
+For a long moment, the crow sat motionless on the rim.
 
-A detective haunted by her partner's betrayal. She struggles between upholding the law and seeking personal justice.
+The easy choice lay before him — fly on, search elsewhere, hope for a miracle further down the road. Many would have taken it. Many had.
 
-- **Motivation**: Prove her innocence
-- **Fear**: Becoming what she hunts
-- **Arc**: Learning to trust again
+But the crow looked at the water, and then he looked at the ground around him, and he began to *think*.
 
-## Tips for Writers
+The ground was littered with pebbles. Small, smooth, and plentiful — the quiet debris of a world that had no use for them.
 
-1. Give characters contradictions
-2. Let their flaws drive conflict
-3. Show growth through choices
+*Until now.*
 
-Related: [[Getting Started with Writing]] | [[World Building Notes]]
+---
 
-#character #story #writing`,
+## Part IV — The Solution
+
+One by one, the crow picked up the pebbles in his beak and dropped them into the pitcher.
+
+It was slow work. Painstaking work. The sun did not pause for him. His thirst did not ease. But with each pebble, the water climbed — imperceptibly at first, then with growing certainty, like a tide answering a distant moon.
+
+**Pebble by pebble. Drop by drop. Rise by rise.**
+
+The other birds watched from the branches above, some with curiosity, some with amusement, some with the quiet envy of those who had already given up and resented those who had not.
+
+*"It will never work,"* one sparrow muttered.
+
+The crow did not reply. He was busy.
+
+---
+
+## Part V — The Reward
+
+When the water finally kissed the rim of the pitcher, the crow drank.
+
+Not greedily — but deeply, deliberately, with the full presence of one who has earned every drop. The water was cool against his parched throat, clean and ancient and perfect.
+
+Around him, the world was still hot. The drought had not broken. The earth was still cracked, the sky still pale and merciless.
+
+But the crow had water. And the crow had something more — the quiet, unshakeable knowledge that *he had solved the unsolvable.*
+
+---
+
+## Epilogue — What the Crow Knew
+
+The crow flew home that evening with steady wings.
+
+He had not found a river. He had not prayed for rain. He had looked at what was available — ordinary pebbles, an ordinary pitcher, an ordinary mind — and he had made them extraordinary through patience and purpose.
+
+This is the oldest lesson, and the hardest to learn:
+
+> *The solution is rarely dramatic. It is usually small, and slow, and right in front of you — waiting for someone patient enough to begin.*
+
+---
+
+## Moral
+
+**Little by little does the trick.**
+
+Where brute force fails, ingenuity prevails. The greatest problems are not solved in a single stroke of genius — they are dismantled, pebble by pebble, by those who refuse to walk away.
+
+---
+
+*Try the **AI Graph** view to visualize the story's key moments and explore alternative paths the crow could have taken.*
+
+#story #fable #classic #wisdom`,
           'story'
      );
-
-     await createNote(
-          'World Building Notes',
-          `# World Building Notes 🌍
-
-Creating immersive settings for your narratives.
-
-## Elements of World Building
-
-### Physical World
-- Geography and climate
-- Architecture and settlements
-- Flora and fauna
-
-### Social Structure
-- Government systems
-- Economic systems
-- Cultural norms
-
-### History
-- Key events
-- Legends and myths
-- Conflicts and alliances
-
-## Questions to Answer
-
-1. What makes this world unique?
-2. How does the environment affect daily life?
-3. What are the sources of conflict?
-4. What are the rules (magic, technology, etc.)?
-
-## Research Methods
-
-- Study real-world analogues
-- Create detailed maps
-- Write in-world documents
-- Develop languages and naming conventions
-
----
-
-Connect to: [[Character Development Guide]]
-
-#worldbuilding #story #research`,
-          'research'
-     );
-
-     await createNote(
-          'Project Ideas',
-          `# Project Ideas 💡
-
-A collection of ideas to explore.
-
-## Writing Projects
-
-- [ ] Short story: "The Last Library"
-- [ ] Novel outline: Detective noir series
-- [ ] Blog post: Productivity with graph thinking
-
-## Research Topics
-
-- [ ] History of knowledge management
-- [ ] Neural networks and creativity
-- [ ] Second brain methodologies
-
-## Learning Goals
-
-- [ ] Master graph visualization
-- [ ] Improve narrative structure
-- [ ] Study character archetypes
-
-## Quick Captures
-
-> "The best ideas come from connecting unexpected concepts."
-
-> "Write first, edit later."
-
----
-
-#ideas #projects #todo`,
-          'note'
-     );
-
-     // Create sample folders
-     await createFolder('Writing');
-     await createFolder('Research');
-     await createFolder('Projects');
 }

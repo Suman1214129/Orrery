@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Orrery - Your Premium Second Brain",
-  description: "A sophisticated note-taking and knowledge management platform with AI-powered thinking, narrative exploration, and visual knowledge mapping.",
+  title: "Workspace",
+  description: "A beautifully crafted personal knowledge base.",
   keywords: ["note-taking", "knowledge management", "second brain", "AI writing", "graph visualization"],
 };
 

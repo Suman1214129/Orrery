@@ -15,6 +15,7 @@ import { sidebarSlide, aiPanelSlide } from '@/lib/animations';
 import { cn } from '@/lib/utils';
 import EditorPage from './(main)/editor/page';
 import GraphPage from './(main)/graph/page';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
 export default function Home() {
   const {
@@ -81,7 +82,8 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <AuthGuard>
+      <div className="flex h-screen overflow-hidden bg-background">
       <AnimatePresence>
         {sidebarOpen && (
           <motion.aside
@@ -130,6 +132,7 @@ export default function Home() {
       </AnimatePresence>
 
       <SettingsDialog />
-    </div>
+      </div>
+    </AuthGuard>
   );
 }

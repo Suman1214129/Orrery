@@ -17,6 +17,7 @@ import { useNotesStore } from '@/stores/notesStore';
 import { initializeSampleVault } from '@/lib/db';
 import { sidebarSlide, aiPanelSlide } from '@/lib/animations';
 import { cn } from '@/lib/utils';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 
 // Mobile breakpoint
 const MOBILE_BREAKPOINT = 768;
@@ -133,7 +134,8 @@ export default function MainLayout({
      };
 
      return (
-          <div className="flex h-screen overflow-hidden bg-background">
+          <AuthGuard>
+               <div className="flex h-screen overflow-hidden bg-background">
                {/* Mobile Backdrop */}
                <AnimatePresence>
                     {isMobile && (sidebarOpen || aiPanelOpen) && (
@@ -216,6 +218,7 @@ export default function MainLayout({
 
                {/* AI Diff Review Overlay */}
                <DiffReviewOverlay />
-          </div>
+               </div>
+          </AuthGuard>
      );
 }

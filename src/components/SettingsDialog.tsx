@@ -8,6 +8,7 @@ import {
      Dialog,
      DialogContent,
      DialogDescription,
+     DialogFooter,
      DialogHeader,
      DialogTitle,
 } from '@/components/ui/dialog';
@@ -22,10 +23,20 @@ import {
      Layout,
      Pencil,
      Check,
-     X
+     X,
+     LogOut,
+     User,
+     Trash2,
+     AlertTriangle,
+     Lock,
+     ChevronRight,
 } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useNotesStore } from '@/stores/notesStore';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 // ==========================================================================
 // THEME SELECTOR
@@ -286,6 +297,201 @@ function KeyboardShortcuts() {
 }
 
 // ==========================================================================
+// ACCOUNT PANEL
+// ==========================================================================
+function AccountPanel() {
+     const { user, signOut, updatePassword, deleteAccount } = useAuthStore();
+     const { notes } = useNotesStore();
+
+     // Change password
+     const [showChangePassword, setShowChangePassword] = useState(false);
+     const [currentPw, setCurrentPw] = useState('');
+     const [newPw, setNewPw] = useState('');
+     const [confirmPw, setConfirmPw] = useState('');
+     const [pwLoading, setPwLoading] = useState(false);
+     const [pwError, setPwError] = useState('');
+     const [pwSuccess, setPwSuccess] = useState(false);
+
+     // Delete data
+     const [showDeleteData, setShowDeleteData] = useState(false);
+     const [deleteDataLoading, setDeleteDataLoading] = useState(false);
+
+     // Delete account
+     const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+     const [deleteAccountPw, setDeleteAccountPw] = useState('');
+     const [deleteAccountLoading, setDeleteAccountLoading] = useState(false);
+     const [deleteAccountError, setDeleteAccountError] = useState('');
+
+     const isEmailUser = user?.providerData?.[0]?.providerId === 'password';
+
+     const handleChangePassword = async (e: React.FormEvent) => {
+          e.preventDefault();
+          setPwError('');
+          if (newPw !== confirmPw) { setPwError('Passwords do not match.'); return; }
+          if (newPw.length < 6) { setPwError('New password must be at least 6 characters.'); return; }
+          setPwLoading(true);
+          try {
+               await updatePassword(currentPw, newPw);
+               setPwSuccess(true);
+               setCurrentPw(''); setNewPw(''); setConfirmPw('');
+               setTimeout(() => { setPwSuccess(false); setShowChangePassword(false); }, 2000);
+          } catch (err: any) {
+               setPwError(err.message || 'Failed to update password.');
+          } finally {
+               setPwLoading(false);
+          }
+     };
+
+     const handleDeleteData = async () => {
+          setDeleteDataLoading(true);
+          try {
+               // Clear all notes from the Dexie db
+               const { deleteNote } = useNotesStore.getState();
+               const allNotes = Array.from(useNotesStore.getState().notes.values());
+               await Promise.all(allNotes.map(n => deleteNote(n.id)));
+               setShowDeleteData(false);
+          } catch {
+               // silently fail
+          } finally {
+               setDeleteDataLoading(false);
+          }
+     };
+
+     const handleDeleteAccount = async () => {
+          setDeleteAccountError('');
+          setDeleteAccountLoading(true);
+          try {
+               await deleteAccount(isEmailUser ? deleteAccountPw : undefined);
+               setShowDeleteAccount(false);
+          } catch (err: any) {
+               setDeleteAccountError(err.message || 'Failed to delete account.');
+          } finally {
+               setDeleteAccountLoading(false);
+          }
+     };
+
+     return (
+          <div className="space-y-6">
+               {/* Profile info */}
+               <div className="flex items-center gap-3 p-4 rounded-xl bg-muted/40 border border-border">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-base shrink-0">
+                         {user?.displayName?.[0]?.toUpperCase() ?? user?.email?.[0]?.toUpperCase() ?? 'U'}
+                    </div>
+                    <div className="min-w-0">
+                         <p className="text-sm font-medium truncate">{user?.displayName || 'User'}</p>
+                         <p className="text-[12px] text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+               </div>
+
+               {/* Sign out */}
+               <div className="space-y-1">
+                    <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">Session</h3>
+                    <button
+                         type="button"
+                         onClick={() => signOut()}
+                         className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors text-sm"
+                    >
+                         <LogOut className="h-4 w-4 text-muted-foreground" />
+                         <span>Sign out</span>
+                    </button>
+               </div>
+
+               {/* Change password (email users only) */}
+               {isEmailUser && (
+                    <div className="space-y-1">
+                         <h3 className="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-2">Security</h3>
+                         <button
+                              type="button"
+                              onClick={() => setShowChangePassword(s => !s)}
+                              className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-muted transition-colors text-sm"
+                         >
+                              <Lock className="h-4 w-4 text-muted-foreground" />
+                              <span className="flex-1 text-left">Change password</span>
+                              <ChevronRight className={cn('h-4 w-4 text-muted-foreground transition-transform', showChangePassword && 'rotate-90')} />
+                         </button>
+                         {showChangePassword && (
+                              <form onSubmit={handleChangePassword} className="mt-2 ml-3 space-y-2 border-l-2 border-border pl-4">
+                                   <Input type="password" placeholder="Current password" value={currentPw} onChange={e => setCurrentPw(e.target.value)} className="h-9" />
+                                   <Input type="password" placeholder="New password" value={newPw} onChange={e => setNewPw(e.target.value)} className="h-9" />
+                                   <Input type="password" placeholder="Confirm new password" value={confirmPw} onChange={e => setConfirmPw(e.target.value)} className="h-9" />
+                                   {pwError && <p className="text-[12px] text-destructive">{pwError}</p>}
+                                   {pwSuccess && <p className="text-[12px] text-green-600">Password updated!</p>}
+                                   <Button type="submit" size="sm" disabled={pwLoading || !currentPw || !newPw || !confirmPw}>
+                                        {pwLoading ? 'Saving...' : 'Update password'}
+                                   </Button>
+                              </form>
+                         )}
+                    </div>
+               )}
+
+               {/* Danger zone */}
+               <div className="space-y-1">
+                    <h3 className="text-xs font-medium uppercase tracking-wide text-destructive/70 mb-2">Danger Zone</h3>
+                    {/* Delete all data */}
+                    <button
+                         type="button"
+                         onClick={() => setShowDeleteData(s => !s)}
+                         className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-destructive/8 transition-colors text-sm text-destructive"
+                    >
+                         <Trash2 className="h-4 w-4" />
+                         <span className="flex-1 text-left">Delete all notes</span>
+                         <span className="text-[11px] text-muted-foreground">{notes.size} notes</span>
+                    </button>
+                    {showDeleteData && (
+                         <div className="mt-1 ml-3 border-l-2 border-destructive/30 pl-4 py-2 space-y-2">
+                              <p className="text-[12px] text-muted-foreground">This will permanently delete all {notes.size} notes. This cannot be undone.</p>
+                              <div className="flex gap-2">
+                                   <Button size="sm" variant="destructive" onClick={handleDeleteData} disabled={deleteDataLoading}>
+                                        {deleteDataLoading ? 'Deleting...' : 'Yes, delete all'}
+                                   </Button>
+                                   <Button size="sm" variant="outline" onClick={() => setShowDeleteData(false)}>Cancel</Button>
+                              </div>
+                         </div>
+                    )}
+
+                    {/* Delete account */}
+                    <button
+                         type="button"
+                         onClick={() => setShowDeleteAccount(s => !s)}
+                         className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-destructive/8 transition-colors text-sm text-destructive"
+                    >
+                         <AlertTriangle className="h-4 w-4" />
+                         <span>Delete account</span>
+                    </button>
+                    {showDeleteAccount && (
+                         <div className="mt-1 ml-3 border-l-2 border-destructive/30 pl-4 py-2 space-y-2">
+                              <p className="text-[12px] text-muted-foreground">
+                                   This will permanently delete your account. This action cannot be undone.
+                              </p>
+                              {isEmailUser && (
+                                   <Input
+                                        type="password"
+                                        placeholder="Enter your password to confirm"
+                                        value={deleteAccountPw}
+                                        onChange={e => setDeleteAccountPw(e.target.value)}
+                                        className="h-9"
+                                   />
+                              )}
+                              {deleteAccountError && <p className="text-[12px] text-destructive">{deleteAccountError}</p>}
+                              <div className="flex gap-2">
+                                   <Button
+                                        size="sm"
+                                        variant="destructive"
+                                        onClick={handleDeleteAccount}
+                                        disabled={deleteAccountLoading || (isEmailUser && !deleteAccountPw)}
+                                   >
+                                        {deleteAccountLoading ? 'Deleting...' : 'Delete my account'}
+                                   </Button>
+                                   <Button size="sm" variant="outline" onClick={() => setShowDeleteAccount(false)}>Cancel</Button>
+                              </div>
+                         </div>
+                    )}
+               </div>
+          </div>
+     );
+}
+
+// ==========================================================================
 // MAIN SETTINGS DIALOG
 // ==========================================================================
 export function SettingsDialog() {
@@ -297,12 +503,12 @@ export function SettingsDialog() {
                     <DialogHeader>
                          <DialogTitle className="text-xl">Settings</DialogTitle>
                          <DialogDescription>
-                              Customize your Orrery experience
+                              Customize your workspace
                          </DialogDescription>
                     </DialogHeader>
 
                     <Tabs defaultValue="appearance" className="mt-4">
-                         <TabsList className="grid w-full grid-cols-4">
+                         <TabsList className="grid w-full grid-cols-5">
                               <TabsTrigger value="appearance" className="gap-2">
                                    <Palette className="h-4 w-4" />
                                    <span className="hidden sm:inline">Theme</span>
@@ -318,6 +524,10 @@ export function SettingsDialog() {
                               <TabsTrigger value="shortcuts" className="gap-2">
                                    <Keyboard className="h-4 w-4" />
                                    <span className="hidden sm:inline">Shortcuts</span>
+                              </TabsTrigger>
+                              <TabsTrigger value="account" className="gap-2">
+                                   <User className="h-4 w-4" />
+                                   <span className="hidden sm:inline">Account</span>
                               </TabsTrigger>
                          </TabsList>
 
@@ -341,6 +551,10 @@ export function SettingsDialog() {
 
                               <TabsContent value="shortcuts" className="mt-0">
                                    <KeyboardShortcuts />
+                              </TabsContent>
+
+                              <TabsContent value="account" className="mt-0">
+                                   <AccountPanel />
                               </TabsContent>
                          </div>
                     </Tabs>

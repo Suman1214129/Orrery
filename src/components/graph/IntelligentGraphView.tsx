@@ -14,6 +14,7 @@ import { useGraphStore } from '@/stores/graphStore';
 import { NOTE_TYPE_CONFIGS, CHECKPOINT_TYPE_ICONS, getTypeColors } from '@/lib/graph/noteTypeConfig';
 import { ExplorationPanel } from './ExplorationPanel';
 import { GraphSettingsPanel } from './GraphSettingsPanel';
+import { LoadingState } from '@/components/ui/LoadingState';
 import type { Checkpoint, DetectedNoteType } from '@/types';
 
 // ==========================================================================
@@ -504,26 +505,14 @@ export function IntelligentGraphView() {
                {/* Analyzing State */}
                {isAnalyzing && (
                     <div className="absolute inset-0 flex items-center justify-center">
-                         <div className="text-center space-y-4 max-w-sm p-8">
-                              <Loader2
-                                   className="h-8 w-8 animate-spin mx-auto"
-                                   style={{ color: colors.accent }}
+                         <div className="flex flex-col items-center gap-6 max-w-sm p-8">
+                              <LoadingState 
+                                   label={analysisStep || "Analyzing Your Note..."} 
+                                   variant="Drive" 
                               />
-                              <h3
-                                   className="text-lg font-medium"
-                                   style={{ color: colors.text }}
-                              >
-                                   Analyzing Your Note...
-                              </h3>
-                              <p
-                                   className="text-sm"
-                                   style={{ color: colors.textMuted }}
-                              >
-                                   {analysisStep}
-                              </p>
-                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-4 opacity-50">
                                    <motion.div
-                                        className="h-2 rounded-full"
+                                        className="h-1 rounded-full"
                                         style={{ backgroundColor: colors.accent }}
                                         initial={{ width: 0 }}
                                         animate={{ width: `${analysisProgress}%` }}
