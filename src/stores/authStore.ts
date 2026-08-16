@@ -18,7 +18,7 @@ import {
   updateProfile,
   type User,
 } from 'firebase/auth';
-import { auth, googleProvider } from '@/lib/firebase';
+import { auth, getFirebaseAuth, getGoogleProvider } from '@/lib/firebase';
 
 // ==========================================================================
 // TYPES
@@ -54,7 +54,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   signInWithEmail: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const firebaseAuth = getFirebaseAuth();
+      await signInWithEmailAndPassword(firebaseAuth, email, password);
       // onAuthStateChanged will update the user state
     } catch (err: any) {
       set({ error: getFirebaseError(err.code), isLoading: false });
@@ -66,7 +67,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   signUpWithEmail: async (name, email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      const firebaseAuth = getFirebaseAuth();
+      const { user } = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       await updateProfile(user, { displayName: name });
       // onAuthStateChanged will update the user state
     } catch (err: any) {
@@ -79,7 +81,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   signInWithGoogle: async () => {
     set({ isLoading: true, error: null });
     try {
-      await signInWithPopup(auth, googleProvider);
+      const firebaseAuth = getFirebaseAuth();
+      const provider = getGoogleProvider();
+      await signInWithPopup(firebaseAuth, provider);
       // onAuthStateChanged will update the user state
     } catch (err: any) {
       set({ error: getFirebaseError(err.code), isLoading: false });
@@ -91,7 +95,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   signOut: async () => {
     set({ isLoading: true, error: null });
     try {
-      await firebaseSignOut(auth);
+      const firebaseAuth = getFirebaseAuth();
+      await firebaseSignOut(firebaseAuth);
       set({ user: null, isAuthenticated: false, isLoading: false });
     } catch (err: any) {
       set({ error: getFirebaseError(err.code), isLoading: false });
@@ -103,7 +108,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   sendPasswordReset: async (email) => {
     set({ error: null });
     try {
-      await sendPasswordResetEmail(auth, email);
+      const firebaseAuth = getFirebaseAuth();
+      await sendPasswordResetEmail(firebaseAuth, email);
     } catch (err: any) {
       set({ error: getFirebaseError(err.code) });
       throw err;
@@ -149,6 +155,16 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   // ─── Subscribe to auth state changes ────────────────────────────────────
   initialize: () => {
+    if (!auth) {
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: 'Firebase is not configured. Add NEXT_PUBLIC_FIREBASE_* values to your environment.',
+      });
+      return () => {};
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       set({
         user,
@@ -175,6 +191,7 @@ function getFirebaseError(code: string): string {
     'auth/popup-closed-by-user': 'Sign-in popup was closed.',
     'auth/network-request-failed': 'Network error. Check your connection.',
     'auth/requires-recent-login': 'Please sign out and sign back in to do this.',
+    'auth/invalid-api-key': 'Firebase configuration is invalid or missing. Check your NEXT_PUBLIC_FIREBASE_* variables.',
   };
   return errors[code] ?? 'An unexpected error occurred. Please try again.';
 }

@@ -508,9 +508,6 @@ export function AuthPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-[11px] text-muted-foreground/50 mt-4">
-          Your data stays on your device.
-        </p>
       </motion.div>
     </div>
   );
